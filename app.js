@@ -40,7 +40,11 @@ function waitRandomMinutes() {
       });
 
       // Attendi un paio di secondi per dare tempo all'interfaccia di aggiornarsi
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const delayMs = Math.floor(Math.random() * (3 - 1 + 1) + 1) * 1000;
+      console.log(
+        `⏳ Attendo ${delayMs / 1000} secondi prima del prossimo click...`
+      );
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
 
       console.log("⏳ Aspetto che 'Create image' sia cliccabile...");
 
