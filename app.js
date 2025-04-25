@@ -3,16 +3,16 @@ import { readFile } from "fs/promises";
 
 // Funzione di attesa random breve (1–3 secondi)
 function waitRandomShortDelay() {
-  const delayMs = Math.floor(Math.random() * 3 + 1) * 1000;
-  console.log(`⏳ Pausa breve di ${delayMs / 1000} secondi...`);
-  return new Promise((resolve) => setTimeout(resolve, delayMs));
+  const delayMs = Math.random() * (3000 - 1000) + 1000; // da 1000ms a 3000ms
+  console.log(`⏳ Pausa breve di ${(delayMs / 1000).toFixed(2)} secondi...`);
+  return new Promise(resolve => setTimeout(resolve, delayMs));
 }
 
 // Funzione di attesa lunga
 function waitRandomMinutes() {
-  const delayMs = Math.floor(Math.random() * 8 + 2) * 60 * 1000;
-  console.log(`🕒 Aspetto ${delayMs / 1000 / 60} minuti...`);
-  return new Promise((resolve) => setTimeout(resolve, delayMs));
+  const delayMs = Math.random() * (4 - 2) * 60 * 1000 + 2 * 60 * 1000; // da 120000ms a 240000ms
+  console.log(`🕒 Attesa lunga di ${(delayMs / 60000).toFixed(2)} minuti...`);
+  return new Promise(resolve => setTimeout(resolve, delayMs));
 }
 
 // Carica i prompt dal file JSON
