@@ -8,9 +8,9 @@ function waitRandomShortDelay() {
   return new Promise((resolve) => setTimeout(resolve, delayMs));
 }
 
-// Funzione di attesa lunga (2–4 minuti)
+// Funzione di attesa lunga
 function waitRandomMinutes() {
-  const delayMs = Math.floor(Math.random() * (4 - 2 + 1) + 2) * 60 * 1000;
+  const delayMs = Math.floor(Math.random() * 8 + 2) * 60 * 1000;
   console.log(`🕒 Aspetto ${delayMs / 1000 / 60} minuti...`);
   return new Promise((resolve) => setTimeout(resolve, delayMs));
 }
