@@ -60,25 +60,26 @@ while (true) {
     await page.focus("textarea");
 
     // Seleziona tutto e cancella il contenuto precedente (Cmd+A + Backspace su Mac/Linux)
-    await page.keyboard.down("Meta"); // 'Control' se sei su Windows
-    await page.keyboard.press("KeyA");
-    await page.keyboard.up("Meta");
-    await page.keyboard.press("Backspace");
+    // await page.keyboard.down("Meta"); // 'Control' se sei su Windows
+    // await page.keyboard.press("KeyA");
+    // await page.keyboard.up("Meta");
+    // await page.keyboard.press("Backspace");
 
+    await page.keyboard.press("Tab");
     await page.keyboard.down("Control");
     await page.keyboard.press("KeyA");
     await page.keyboard.up("Control");
-    await page.keyboard.press("Backspace");
+    // await page.keyboard.press("Backspace");
 
-    for (let i = 0; i < 1000; i++) {
-      await page.keyboard.press("Backspace");
-    }
+    // for (let i = 0; i < 1000; i++) {
+    //   await page.keyboard.press("Backspace");
+    // }
 
     // Attendi un attimo prima di digitare
     await new Promise((resolve) => setTimeout(resolve, 300));
 
     // Digita il prompt come un umano
-    await page.keyboard.type(currentPrompt, { delay: 10 });
+    await page.keyboard.type(currentPrompt, { delay: 2 });
 
     console.log("✏️ Prompt inserito.");
 
