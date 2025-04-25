@@ -34,13 +34,13 @@ async function waitWithProgress(label, totalMs) {
 }
 
 // Funzione di attesa random breve (1–3 secondi)
-function waitRandomShortDelay() {
+async function waitRandomShortDelay() {
   const delayMs = Math.random() * (3000 - 1000) + 1000; // da 1000ms a 3000ms
   await waitWithProgress(`⏳ Pausa breve di ${(delayMs / 1000).toFixed(2)} sec`, delayMs);
 }
 
 // Funzione di attesa lunga
-function waitRandomMinutes() {
+async function waitRandomMinutes() {
   const delayMs = Math.random() * (4 - 2) * 60 * 1000 + 2 * 60 * 1000; // da 120000ms a 240000ms
   await waitWithProgress(`🕒 Attesa lunga di ${(delayMs / 60000).toFixed(2)} min`, delayMs);
 }
