@@ -1,0 +1,13 @@
+{
+  "name": "sora-get",
+  "type": "module",
+  "version": "1.0.0",
+  "license": "MIT",
+  "description": "A simple script to get Sora's contents",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "puppeteer-core": "^24.7.2"
+  }
+}
