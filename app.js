@@ -28,45 +28,58 @@ function waitRandomMinutes() {
 
   while (true) {
     try {
-      console.log("👉 Clic sul primo pulsante (class truncate)...");
+      console.log("👉 Clic sul pulsante 'Edit prompt'...");
 
-      // Clicca sul primo bottone con class truncate
       await page.evaluate(() => {
-        const btn = document.querySelector("button.truncate");
-        if (btn) btn.click();
+        const buttons = [...document.querySelectorAll("button")];
+        const target = buttons.find((btn) => {
+          const div = btn.querySelector("div");
+          return div && div.textContent.trim().toLowerCase() === "edit prompt";
+        });
+        if (target) target.click();
       });
 
-      // Aspetta che il modale si apra (cerchiamo per span "Create image")
+      // Attendi un paio di secondi per dare tempo all'interfaccia di aggiornarsi
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      console.log("⏳ Aspetto che 'Create image' sia cliccabile...");
+
+      // Aspetta che il bottone "Create image" appaia e sia abilitato
       await page.waitForFunction(
         () => {
           return [...document.querySelectorAll("button")].some((btn) => {
             const span = btn.querySelector("span.sr-only");
             return (
-              span && span.innerText.toLowerCase().includes("create image")
+              span &&
+              span.innerText.toLowerCase().includes("create image") &&
+              btn.getAttribute("data-disabled") === "false"
             );
           });
         },
-        { timeout: 5000 }
+        { timeout: 10000 }
       );
 
       console.log("👉 Clic sul pulsante 'Create image'...");
 
-      // Clicca sul bottone identificato dal contenuto del suo span
+      // Clicca sul bottone "Create image"
       await page.evaluate(() => {
         const buttons = [...document.querySelectorAll("button")];
         const target = buttons.find((btn) => {
           const span = btn.querySelector("span.sr-only");
-          return span && span.innerText.toLowerCase().includes("create image");
+          return (
+            span &&
+            span.innerText.toLowerCase().includes("create image") &&
+            btn.getAttribute("data-disabled") === "false"
+          );
         });
         if (target) target.click();
       });
 
       console.log("✅ Fatto. Ora attesa casuale...");
-
       await waitRandomMinutes();
     } catch (err) {
       console.error("❌ Errore nel ciclo:", err.message);
-      await new Promise((resolve) => setTimeout(resolve, 60 * 1000));
+      await new Promise((resolve) => setTimeout(resolve, 60000));
     }
   }
 })();
