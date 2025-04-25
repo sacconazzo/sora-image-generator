@@ -41,55 +41,64 @@ let index = 0;
 while (true) {
   try {
     const currentPrompt = prompts[index % prompts.length];
-    console.log(`📝 Prompt corrente: "${currentPrompt}"`);
 
-    // Clic su "Edit prompt"
-    await page.evaluate(() => {
-      const buttons = [...document.querySelectorAll("button")];
-      const target = buttons.find((btn) => {
-        const div = btn.querySelector("div");
-        return div && div.textContent.trim().toLowerCase() === "edit prompt";
+    for (let repeat = 1; repeat <= 3; repeat++) {
+      console.log(
+        `📝 Prompt corrente (ripetizione ${repeat}/3): "${currentPrompt}"`
+      );
+
+      // Clic su "Edit prompt"
+      await page.evaluate(() => {
+        const buttons = [...document.querySelectorAll("button")];
+        const target = buttons.find((btn) => {
+          const div = btn.querySelector("div");
+          return div && div.textContent.trim().toLowerCase() === "edit prompt";
+        });
+        if (target) target.click();
       });
-      if (target) target.click();
-    });
 
-    // Aspetta un tempo breve
-    await waitRandomShortDelay();
+      // Aspetta un tempo breve
+      await waitRandomShortDelay();
 
-    // Focus sulla textarea
-    await page.focus("textarea");
+      // Focus sulla textarea
+      await page.focus("textarea");
 
-    // Seleziona tutto e cancella il contenuto precedente (Cmd+A + Backspace su Mac/Linux)
-    // await page.keyboard.down("Meta"); // 'Control' se sei su Windows
-    // await page.keyboard.press("KeyA");
-    // await page.keyboard.up("Meta");
-    // await page.keyboard.press("Backspace");
+      // Seleziona tutto e cancella
+      await page.keyboard.press("Tab");
+      await page.keyboard.down("Control");
+      await page.keyboard.press("KeyA");
+      await page.keyboard.up("Control");
 
-    await page.keyboard.press("Tab");
-    await page.keyboard.down("Control");
-    await page.keyboard.press("KeyA");
-    await page.keyboard.up("Control");
-    // await page.keyboard.press("Backspace");
+      // Aspetta un attimo prima di digitare
+      await new Promise((resolve) => setTimeout(resolve, 300));
 
-    // for (let i = 0; i < 1000; i++) {
-    //   await page.keyboard.press("Backspace");
-    // }
+      // Digita il prompt
+      await page.keyboard.type(currentPrompt, { delay: 2 });
 
-    // Attendi un attimo prima di digitare
-    await new Promise((resolve) => setTimeout(resolve, 300));
+      console.log("✏️ Prompt inserito.");
 
-    // Digita il prompt come un umano
-    await page.keyboard.type(currentPrompt, { delay: 2 });
+      // Aspetta un tempo breve
+      await waitRandomShortDelay();
 
-    console.log("✏️ Prompt inserito.");
+      // Aspetta che "Create image" sia abilitato
+      await page.waitForFunction(
+        () => {
+          return [...document.querySelectorAll("button")].some((btn) => {
+            const span = btn.querySelector("span.sr-only");
+            return (
+              span &&
+              span.innerText.toLowerCase().includes("create image") &&
+              btn.getAttribute("data-disabled") === "false"
+            );
+          });
+        },
+        { timeout: 10000 }
+      );
 
-    // Aspetta un tempo breve
-    await waitRandomShortDelay();
-
-    // Aspetta che "Create image" sia abilitato
-    await page.waitForFunction(
-      () => {
-        return [...document.querySelectorAll("button")].some((btn) => {
+      // Clic su "Create image"
+      await page.evaluate(() => {
+        const buttons = [...document.querySelectorAll("button")];
+        const target = buttons.find((btn) => {
           const span = btn.querySelector("span.sr-only");
           return (
             span &&
@@ -97,28 +106,14 @@ while (true) {
             btn.getAttribute("data-disabled") === "false"
           );
         });
-      },
-      { timeout: 10000 }
-    );
-
-    // Clic su "Create image"
-    await page.evaluate(() => {
-      const buttons = [...document.querySelectorAll("button")];
-      const target = buttons.find((btn) => {
-        const span = btn.querySelector("span.sr-only");
-        return (
-          span &&
-          span.innerText.toLowerCase().includes("create image") &&
-          btn.getAttribute("data-disabled") === "false"
-        );
+        if (target) target.click();
       });
-      if (target) target.click();
-    });
 
-    console.log("🎨 Generazione avviata.");
+      console.log("🎨 Generazione avviata.");
 
-    // Attendi tempo casuale (2–4 minuti)
-    await waitRandomMinutes();
+      // Attendi tempo casuale (2–4 minuti)
+      await waitRandomMinutes();
+    }
 
     index++;
   } catch (err) {
