@@ -97,20 +97,17 @@ while (true) {
     const retries = currentPromptTemplate.retries || 3; // Default a 3 retry se non specificato
     const currentPrompt = replaceVariables(currentPromptText, vars);
 
-    const timestamp = new Date().toLocaleString();
-    await logToFile(
-      `${timestamp} - 📝 Prompt ${(index % prompts.length) + 1}/${
-        prompts.length
-      }: "${currentPrompt}"`
-    );
-
     for (let repeat = 1; repeat <= retries; repeat++) {
-      console.log(
-        `\n${timestamp}\n📝 Prompt ${(index % prompts.length) + 1}/${
-          prompts.length
-        } (retry ${repeat}/${retries}): "${currentPrompt}"`
-      );
-      await logToFile(`${timestamp} - Retry ${repeat}/${retries}`);
+      const timestamp = new Date().toLocaleString();
+      const logMessage = `\n${timestamp}\n📝 Prompt ${
+        (index % prompts.length) + 1
+      }/${prompts.length} (retry ${repeat}/${retries}): "${currentPrompt}"`;
+      console.log(logMessage);
+      if (repeat > 1) {
+        await logToFile(logMessage);
+      } else {
+        await logToFile(`${timestamp} - Retry ${repeat}/${retries}`);
+      }
 
       // Clic su "Edit prompt"
       await page.evaluate(() => {
