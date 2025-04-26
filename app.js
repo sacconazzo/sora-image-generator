@@ -67,9 +67,6 @@ function replaceVariables(prompt, vars) {
   });
 }
 
-// Carica i prompt e le variabili dal file JSON
-const { prompts, vars } = JSON.parse(await readFile("prompts.json", "utf-8"));
-
 const res = await fetch("http://localhost:9222/json/version");
 const { webSocketDebuggerUrl } = await res.json();
 
@@ -92,6 +89,11 @@ let index = 0;
 
 while (true) {
   try {
+    // Carica i prompt e le variabili dal file JSON
+    const { prompts, vars } = JSON.parse(
+      await readFile("prompts.json", "utf-8")
+    );
+
     const currentPromptTemplate = prompts[index % prompts.length];
     const currentPromptText = currentPromptTemplate.text;
     const retries = currentPromptTemplate.retries || 3; // Default a 3 retry se non specificato
