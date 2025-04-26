@@ -123,7 +123,7 @@ while (true) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Digita il prompt
-      await page.keyboard.type(currentPrompt, { delay: Math.random() * 6 + 6 });
+      await page.keyboard.type(currentPrompt, { delay: Math.random() * 6 + 2 });
 
       console.log("✏️ Prompt inserito.");
 
