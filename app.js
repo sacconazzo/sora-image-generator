@@ -83,14 +83,16 @@ let index = 0;
 while (true) {
   try {
     const currentPromptTemplate = prompts[index % prompts.length];
-    const currentPrompt = replaceVariables(currentPromptTemplate, vars);
+    const currentPromptText = currentPromptTemplate.text;
+    const retries = currentPromptTemplate.retries || 3; // Default a 3 retry se non specificato
+    const currentPrompt = replaceVariables(currentPromptText, vars);
 
-    for (let repeat = 1; repeat <= 3; repeat++) {
+    for (let repeat = 1; repeat <= retries; repeat++) {
       console.log(`\n⏱️  ${new Date().toLocaleString()}`);
       console.log(
         `📝 Prompt ${(index % prompts.length) + 1}/${
           prompts.length
-        } (retry ${repeat}/3):`
+        } (retry ${repeat}/${retries}):`
       );
       console.log(`"${currentPrompt}"`);
 
