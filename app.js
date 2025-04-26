@@ -1,5 +1,5 @@
 import puppeteer from "puppeteer-core";
-import { readFile } from "fs/promises";
+import { readFile, appendFile } from "fs/promises";
 
 async function waitWithProgress(label, totalMs) {
   const totalSeconds = Math.floor(totalMs / 1000);
@@ -29,6 +29,16 @@ async function waitWithProgress(label, totalMs) {
   process.stdout.clearLine(0);
   process.stdout.cursorTo(0);
   process.stdout.write(`${label}: ✅ Completato\n`);
+}
+
+// Funzione per salvare i log su file
+async function logToFile(message) {
+  const logFilePath = "log.logs"; // Nome del file di log
+  try {
+    await appendFile(logFilePath, message + "\n", "utf-8");
+  } catch (err) {
+    console.error("❌ Errore durante il salvataggio del log:", err.message);
+  }
 }
 
 // Funzione di attesa random breve (1–3 secondi)
@@ -88,12 +98,12 @@ while (true) {
     const currentPrompt = replaceVariables(currentPromptText, vars);
 
     for (let repeat = 1; repeat <= retries; repeat++) {
-      console.log(`\n⏱️  ${new Date().toLocaleString()}`);
-      console.log(
-        `📝 Prompt ${(index % prompts.length) + 1}/${
-          prompts.length
-        } (retry ${repeat}/${retries}): "${currentPrompt}"`
-      );
+      const timestamp = new Date().toLocaleString();
+      const logMessage = `📝 Prompt ${(index % prompts.length) + 1}/${
+        prompts.length
+      } (retry ${repeat}/${retries}): "${currentPrompt}"`;
+      console.log(`\n${timestamp}\n${logMessage}`);
+      await logToFile(`${timestamp} - ${logMessage}`);
 
       // Clic su "Edit prompt"
       await page.evaluate(() => {
