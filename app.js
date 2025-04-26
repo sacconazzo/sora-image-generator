@@ -92,9 +92,8 @@ while (true) {
       console.log(
         `📝 Prompt ${(index % prompts.length) + 1}/${
           prompts.length
-        } (retry ${repeat}/${retries}):`
+        } (retry ${repeat}/${retries}): "${currentPrompt}"`
       );
-      console.log(`"${currentPrompt}"`);
 
       // Clic su "Edit prompt"
       await page.evaluate(() => {
