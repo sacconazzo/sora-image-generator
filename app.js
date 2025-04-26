@@ -2,8 +2,6 @@ import puppeteer from "puppeteer-core";
 import { readFile } from "fs/promises";
 
 async function waitWithProgress(label, totalMs) {
-  console.log("");
-
   const totalSeconds = Math.floor(totalMs / 1000);
   let elapsed = 0;
 
@@ -30,7 +28,7 @@ async function waitWithProgress(label, totalMs) {
 
   process.stdout.clearLine(0);
   process.stdout.cursorTo(0);
-  process.stdout.write(`${label}: 100% (0s) ✅ Completato\n`);
+  process.stdout.write(`${label}: ✅ Completato\n`);
 }
 
 // Funzione di attesa random breve (1–3 secondi)
@@ -88,9 +86,13 @@ while (true) {
     const currentPrompt = replaceVariables(currentPromptTemplate, vars);
 
     for (let repeat = 1; repeat <= 3; repeat++) {
+      console.log(`\n⏱️  ${new Date().toLocaleString()}`);
       console.log(
-        `📝 Prompt corrente (ripetizione ${repeat}/3): "${currentPrompt}"`
+        `📝 Prompt ${(index % prompts.length) + 1}/${
+          prompts.length
+        } (retry ${repeat}/3):`
       );
+      console.log(`"${currentPrompt}"`);
 
       // Clic su "Edit prompt"
       await page.evaluate(() => {
