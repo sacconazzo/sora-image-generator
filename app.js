@@ -110,20 +110,16 @@ while (true) {
 
       // Focus sulla textarea
       await page.focus("textarea");
+      await new Promise((resolve) => setTimeout(resolve, 300));
 
       // Si posiziona
       await page.keyboard.press("Tab");
-      await page.keyboard.down("Shift");
-      await page.keyboard.press("Tab");
-      await page.keyboard.up("Shift");
-
       await new Promise((resolve) => setTimeout(resolve, 300));
 
       // Seleziona tutto e cancella
       await page.keyboard.down("Control");
       await page.keyboard.press("KeyA");
       await page.keyboard.up("Control");
-
       await new Promise((resolve) => setTimeout(resolve, 300));
 
       // Digita il prompt
