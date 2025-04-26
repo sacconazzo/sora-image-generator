@@ -40,7 +40,7 @@ async function waitRandomShortDelay() {
 
 // Funzione di attesa lunga
 async function waitRandomMinutes() {
-  const delayMs = Math.random() * (8 - 4) * 60 * 1000 + 2 * 60 * 1000; // da 4 a 8 minuti
+  const delayMs = Math.random() * (10 - 6) * 60 * 1000 + 2 * 60 * 1000; // da 6 a 8 minuti
   const msg = `🕒 Attesa lunga di ${(delayMs / 60000).toFixed(2)} min`;
   await waitWithProgress(msg, delayMs);
 }
