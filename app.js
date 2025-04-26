@@ -105,7 +105,7 @@ while (true) {
         (index % prompts.length) + 1
       }/${prompts.length} (retry ${repeat}/${retries}): "${currentPrompt}"`;
       console.log(logMessage);
-      if (repeat > 1) {
+      if (repeat === 1) {
         await logToFile(logMessage);
       } else {
         await logToFile(`${timestamp} - Retry ${repeat}/${retries}`);
