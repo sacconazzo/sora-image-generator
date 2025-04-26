@@ -47,8 +47,20 @@ async function waitRandomMinutes() {
   await waitWithProgress(msg, delayMs);
 }
 
-// Carica i prompt dal file JSON
-const { prompts } = JSON.parse(await readFile("prompts.json", "utf-8"));
+// Funzione per sostituire le variabili nei prompt
+function replaceVariables(prompt, vars) {
+  return prompt.replace(/{{(.*?)}}/g, (_, varName) => {
+    const values = vars[varName];
+    if (!values || values.length === 0) {
+      throw new Error(`Variabile "${varName}" non trovata o vuota.`);
+    }
+    const randomIndex = Math.floor(Math.random() * values.length);
+    return values[randomIndex];
+  });
+}
+
+// Carica i prompt e le variabili dal file JSON
+const { prompts, vars } = JSON.parse(await readFile("prompts.json", "utf-8"));
 
 const res = await fetch("http://localhost:9222/json/version");
 const { webSocketDebuggerUrl } = await res.json();
@@ -72,7 +84,8 @@ let index = 0;
 
 while (true) {
   try {
-    const currentPrompt = prompts[index % prompts.length];
+    const currentPromptTemplate = prompts[index % prompts.length];
+    const currentPrompt = replaceVariables(currentPromptTemplate, vars);
 
     for (let repeat = 1; repeat <= 3; repeat++) {
       console.log(
