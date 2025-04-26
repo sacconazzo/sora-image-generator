@@ -2,8 +2,8 @@ import puppeteer from "puppeteer-core";
 import { readFile } from "fs/promises";
 
 async function waitWithProgress(label, totalMs) {
-  console.log('')
-  
+  console.log("");
+
   const totalSeconds = Math.floor(totalMs / 1000);
   let elapsed = 0;
 
@@ -18,14 +18,14 @@ async function waitWithProgress(label, totalMs) {
   renderProgress();
 
   while (elapsed < totalSeconds) {
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     elapsed++;
     renderProgress();
   }
 
   const remainingMs = totalMs % 1000;
   if (remainingMs > 0) {
-    await new Promise(resolve => setTimeout(resolve, remainingMs));
+    await new Promise((resolve) => setTimeout(resolve, remainingMs));
   }
 
   process.stdout.clearLine(0);
@@ -36,13 +36,15 @@ async function waitWithProgress(label, totalMs) {
 // Funzione di attesa random breve (1–3 secondi)
 async function waitRandomShortDelay() {
   const delayMs = Math.random() * (3000 - 1000) + 1000; // da 1000ms a 3000ms
-  await waitWithProgress(`⏳ Pausa breve di ${(delayMs / 1000).toFixed(2)} sec`, delayMs);
+  const msg = `⏳ Pausa breve di ${(delayMs / 1000).toFixed(2)} sec`;
+  await waitWithProgress(msg, delayMs);
 }
 
 // Funzione di attesa lunga
 async function waitRandomMinutes() {
-  const delayMs = Math.random() * (4 - 2) * 60 * 1000 + 2 * 60 * 1000; // da 120000ms a 240000ms
-  await waitWithProgress(`🕒 Attesa lunga di ${(delayMs / 60000).toFixed(2)} min`, delayMs);
+  const delayMs = Math.random() * (8 - 4) * 60 * 1000 + 2 * 60 * 1000; // da 4 a 8 minuti
+  const msg = `🕒 Attesa lunga di ${(delayMs / 60000).toFixed(2)} min`;
+  await waitWithProgress(msg, delayMs);
 }
 
 // Carica i prompt dal file JSON
