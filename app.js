@@ -33,7 +33,7 @@ async function waitWithProgress(label, totalMs) {
 
 // Funzione per salvare i log su file
 async function logToFile(message) {
-  const logFilePath = "log.logs"; // Nome del file di log
+  const logFilePath = "logs.log"; // Nome del file di log
   try {
     await appendFile(logFilePath, message + "\n", "utf-8");
   } catch (err) {
