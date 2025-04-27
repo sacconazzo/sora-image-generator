@@ -8,8 +8,7 @@ This script uses **Puppeteer** to interact with the [sora.com](https://sora.com)
 
 1. **Chromium** installed on your system.
 2. You must be logged into the [sora.com](https://sora.com) website.
-3. Navigate to a generated image page, such as:  
-   [https://sora.chatgpt.com/g/gen_01jstffcxxf9dafhw0cb3yzt9z](https://sora.chatgpt.com/g/gen_01jstffcxxf9dafhw0cb3yzt9z).
+3. Navigate to the **My Media** page and select a generated image, such as: https://sora.chatgpt.com/t/task_01jsw4zeykft8b36de9d73vfag.
 
 ## Setup
 
@@ -40,8 +39,9 @@ yarn install
 ## Usage
 
 1. Start Chromium with the command above.
-2. Log in to [sora.com](https://sora.com) and navigate to a generated image page.
-3. Run the script with:
+2. Log in to [sora.com](https://sora.com) and navigate to the **My Media** page.
+3. Open a generated image.
+4. Run the script with:
 
 ```bash
 yarn start
