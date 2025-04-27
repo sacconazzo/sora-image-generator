@@ -1,7 +1,28 @@
 {
   "prompts": [
-    "Un paesaggio futuristico su Marte con vegetazione aliena.",
-    "Una ragazza cyborg che fa yoga in una foresta tropicale.",
-    "Un samurai che osserva un tramonto nello stile di Studio Ghibli."
-  ]
+    {
+      "text": "Un paesaggio futuristico su {{location}} con {{feature}}.",
+      "retries": 3
+    },
+    {
+      "text": "Una {{character}} che fa {{activity}} in una {{location}}.",
+      "retries": 2
+    },
+    {
+      "text": "Un {{character}} che {{action}} nello stile di {{style}}.",
+      "retries": 1
+    }
+  ],
+  "vars": {
+    "location": ["Marte", "una foresta tropicale", "una città futuristica"],
+    "feature": ["vegetazione aliena", "architettura avanzata", "robot volanti"],
+    "character": ["ragazza cyborg", "samurai", "esploratore spaziale"],
+    "activity": ["yoga", "meditazione", "esplorazione"],
+    "action": [
+      "osserva un tramonto",
+      "combatte con una spada",
+      "riflette sul futuro"
+    ],
+    "style": ["Studio Ghibli", "cyberpunk", "minimalista"]
+  }
 }

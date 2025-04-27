@@ -1,6 +1,7 @@
 import puppeteer from "puppeteer-core";
 import { readFile, appendFile } from "fs/promises";
 
+// Function to display a progress bar while waiting
 async function waitWithProgress(label, totalMs) {
   const totalSeconds = Math.floor(totalMs / 1000);
   let elapsed = 0;
@@ -28,39 +29,39 @@ async function waitWithProgress(label, totalMs) {
 
   process.stdout.clearLine(0);
   process.stdout.cursorTo(0);
-  process.stdout.write(`${label}: ✅ Completato\n`);
+  process.stdout.write(`${label}: ✅ Completed\n`);
 }
 
-// Funzione per salvare i log su file
+// Function to save logs to a file
 async function logToFile(message) {
-  const logFilePath = "logs.log"; // Nome del file di log
+  const logFilePath = "logs.log"; // Log file name
   try {
     await appendFile(logFilePath, message + "\n", "utf-8");
   } catch (err) {
-    console.error("❌ Errore durante il salvataggio del log:", err.message);
+    console.error("❌ Error saving log:", err.message);
   }
 }
 
-// Funzione di attesa random breve (1–3 secondi)
+// Function for a short random delay (1–3 seconds)
 async function waitRandomShortDelay() {
-  const delayMs = Math.random() * (3000 - 1000) + 1000; // da 1000ms a 3000ms
-  const msg = `⏳ Pausa breve di ${(delayMs / 1000).toFixed(2)} sec`;
+  const delayMs = Math.random() * (3000 - 1000) + 1000; // 1000ms to 3000ms
+  const msg = `⏳ Short pause of ${(delayMs / 1000).toFixed(2)} sec`;
   await waitWithProgress(msg, delayMs);
 }
 
-// Funzione di attesa lunga
+// Function for a long random delay
 async function waitRandomMinutes() {
-  const delayMs = (7 + Math.random() * 3) * 60 * 1000; // da 7 a 10 minuti
-  const msg = `🕒 Attesa lunga di ${(delayMs / 60000).toFixed(2)} min`;
+  const delayMs = (7 + Math.random() * 3) * 60 * 1000; // 7 to 10 minutes
+  const msg = `🕒 Long wait of ${(delayMs / 60000).toFixed(2)} min`;
   await waitWithProgress(msg, delayMs);
 }
 
-// Funzione per sostituire le variabili nei prompt
+// Function to replace variables in prompts
 function replaceVariables(prompt, vars) {
   return prompt.replace(/{{(.*?)}}/g, (_, varName) => {
     const values = vars[varName];
     if (!values || values.length === 0) {
-      throw new Error(`Variabile "${varName}" non trovata o vuota.`);
+      throw new Error(`Variable "${varName}" not found or empty.`);
     }
     const randomIndex = Math.floor(Math.random() * values.length);
     return values[randomIndex];
@@ -79,24 +80,24 @@ const pages = await browser.pages();
 const page = pages.find((p) => p.url().includes("sora"));
 
 if (!page) {
-  console.log('❌ Pagina "My Media" di Sora non trovata.');
+  console.log('❌ "My Media" page on Sora not found.');
   process.exit(1);
 }
 
-console.log("✅ Collegato alla pagina:", page.url());
+console.log("✅ Connected to page:", page.url());
 
 let index = 0;
 
 while (true) {
   try {
-    // Carica i prompt e le variabili dal file JSON
+    // Load prompts and variables from the JSON file
     const { prompts, vars } = JSON.parse(
       await readFile("prompts.json", "utf-8")
     );
 
     const currentPromptTemplate = prompts[index % prompts.length];
     const currentPromptText = currentPromptTemplate.text;
-    const retries = currentPromptTemplate.retries || 3; // Default a 3 retry se non specificato
+    const retries = currentPromptTemplate.retries || 3; // Default to 3 retries if not specified
     const currentPrompt = replaceVariables(currentPromptText, vars);
 
     for (let repeat = 1; repeat <= retries; repeat++) {
@@ -111,7 +112,7 @@ while (true) {
         await logToFile(`${timestamp} - Retry ${repeat}/${retries}`);
       }
 
-      // Clic su "Edit prompt"
+      // Click "Edit prompt"
       await page.evaluate(() => {
         const buttons = [...document.querySelectorAll("button")];
         const target = buttons.find((btn) => {
@@ -121,32 +122,32 @@ while (true) {
         if (target) target.click();
       });
 
-      // Aspetta un tempo breve
+      // Wait for a short time
       await waitRandomShortDelay();
 
-      // Focus sulla textarea
+      // Focus on the textarea
       await page.focus("textarea");
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Si posiziona
+      // Position the cursor
       await page.keyboard.press("Tab");
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Seleziona tutto e cancella
+      // Select all and delete
       await page.keyboard.down("Control");
       await page.keyboard.press("KeyA");
       await page.keyboard.up("Control");
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Digita il prompt
+      // Type the prompt
       await page.keyboard.type(currentPrompt, { delay: Math.random() * 6 + 2 });
 
-      console.log("✏️ Prompt inserito.");
+      console.log("✏️ Prompt entered.");
 
-      // Aspetta un tempo breve
+      // Wait for a short time
       await waitRandomShortDelay();
 
-      // Aspetta che "Create image" sia abilitato
+      // Wait for "Create image" to be enabled
       await page.waitForFunction(
         () => {
           return [...document.querySelectorAll("button")].some((btn) => {
@@ -161,7 +162,7 @@ while (true) {
         { timeout: 10000 }
       );
 
-      // Clic su "Create image"
+      // Click "Create image"
       await page.evaluate(() => {
         const buttons = [...document.querySelectorAll("button")];
         const target = buttons.find((btn) => {
@@ -175,15 +176,15 @@ while (true) {
         if (target) target.click();
       });
 
-      console.log("🎨 Generazione avviata.");
+      console.log("🎨 Image generation started.");
 
-      // Attendi tempo casuale (2–4 minuti)
+      // Wait for a random time (2–4 minutes)
       await waitRandomMinutes();
     }
 
     index++;
   } catch (err) {
-    console.error("❌ Errore nel ciclo:", err.message);
+    console.error("❌ Error in loop:", err.message);
     await new Promise((resolve) => setTimeout(resolve, 60000));
   }
 }
