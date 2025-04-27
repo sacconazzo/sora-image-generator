@@ -58,13 +58,18 @@ async function waitRandomMinutes() {
 
 // Function to replace variables in prompts
 function replaceVariables(prompt, vars) {
+  const usedValues = {}; // Store the random value for each variable
+
   return prompt.replace(/{{(.*?)}}/g, (_, varName) => {
-    const values = vars[varName];
-    if (!values || values.length === 0) {
-      throw new Error(`Variable "${varName}" not found or empty.`);
+    if (!usedValues[varName]) {
+      const values = vars[varName];
+      if (!values || values.length === 0) {
+        throw new Error(`Variable "${varName}" not found or empty.`);
+      }
+      const randomIndex = Math.floor(Math.random() * values.length);
+      usedValues[varName] = values[randomIndex];
     }
-    const randomIndex = Math.floor(Math.random() * values.length);
-    return values[randomIndex];
+    return usedValues[varName];
   });
 }
 
