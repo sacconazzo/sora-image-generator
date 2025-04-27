@@ -1,4 +1,4 @@
-# Sora-Generate-Puppeteer
+# Sora Image Generator
 
 ## Description
 
