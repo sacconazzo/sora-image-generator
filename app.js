@@ -50,7 +50,7 @@ async function waitRandomShortDelay() {
 }
 
 // Function for a long random delay
-async function waitRandomMinutes({ waitMin = 7, waitMax = 10 }) {
+async function waitRandomMinutes({ waitMin = 7, waitMax = 10 } = {}) {
   const delayMs = (waitMin + Math.random() * (waitMax - waitMin)) * 60000; // Wait between waitMin and waitMax mins
   const msg = `🕒 Long wait of ${(delayMs / 60000).toFixed(2)} min`;
   await waitWithProgress(msg, delayMs);
