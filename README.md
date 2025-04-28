@@ -51,8 +51,8 @@ The script will begin interacting with the page, entering prompts, and generatin
 
 ## Notes
 
-- Prompts and variables used by the script are configured in the `prompts.json` file.
-- Ensure the `prompts.json` file is correctly set up before running the script.
+- Prompts and variables used by the script are configured in the `playbook.json` file.
+- Ensure the `playbook.json` file is correctly set up before running the script.
 - Logs of operations are saved in the `logs.log` file.
 
 ## Dependencies
