@@ -51,7 +51,9 @@ async function waitRandomShortDelay() {
 
 // Function for a long random delay
 async function waitRandomMinutes() {
-  const delayMs = (7 + Math.random() * 3) * 60 * 1000; // 7 to 10 minutes
+  const waitMin = params.waitMin || 7;
+  const waitMax = params.waitMax || 10;
+  const delayMs = (waitMin + Math.random() * (waitMax - waitMin)) * 60000; // Wait between waitMin and waitMax mins
   const msg = `🕒 Long wait of ${(delayMs / 60000).toFixed(2)} min`;
   await waitWithProgress(msg, delayMs);
 }
@@ -96,8 +98,8 @@ let index = 0;
 while (true) {
   try {
     // Load prompts and variables from the JSON file
-    const { prompts, vars } = JSON.parse(
-      await readFile("prompts.json", "utf-8")
+    const { prompts, vars, params } = JSON.parse(
+      await readFile("playbook.json", "utf-8")
     );
 
     const currentPromptTemplate = prompts[index % prompts.length];

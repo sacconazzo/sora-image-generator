@@ -24,5 +24,9 @@
       "riflette sul futuro"
     ],
     "style": ["Studio Ghibli", "cyberpunk", "minimalista"]
+  },
+  "params": {
+    "waitMin": 7,
+    "waitMax": 10
   }
 }
