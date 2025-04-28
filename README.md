@@ -8,7 +8,7 @@ This script uses **Puppeteer** to interact with the [sora.com](https://sora.com)
 
 1. **Chromium** installed on your system.
 2. You must be logged into the [sora.com](https://sora.com) website.
-3. Navigate to the **My Media** page and select a generated image, such as: https://sora.chatgpt.com/t/task_01jsw4zeykft8b36de9d73vfag.
+3. Navigate to the **My Media** page and select a generated image (URL such as: https://sora.chatgpt.com/t/task_01jsw4zeykft8b36de9d73vfag).
 
 ## Setup
 
