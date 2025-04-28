@@ -183,7 +183,7 @@ while (true) {
 
       console.log("🎨 Image generation started.");
 
-      // Wait for a random time (2–4 minutes)
+      // Wait for a random time
       await waitRandomMinutes(params);
     }
 
