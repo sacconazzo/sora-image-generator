@@ -91,8 +91,6 @@ if (!page) {
 
 console.log("✅ Connected to page:", page.url());
 
-let index = 0;
-
 while (true) {
   try {
     // Load prompts and variables from the JSON file
@@ -100,16 +98,18 @@ while (true) {
       await readFile("playbook.json", "utf-8")
     );
 
-    const currentPromptTemplate = prompts[index % prompts.length];
+    // Select a random prompt
+    const randomIndex = Math.floor(Math.random() * prompts.length);
+    const currentPromptTemplate = prompts[randomIndex];
     const currentPromptText = currentPromptTemplate.text;
     const retries = currentPromptTemplate.retries || 3; // Default to 3 retries if not specified
     const currentPrompt = replaceVariables(currentPromptText, vars);
 
     for (let repeat = 1; repeat <= retries; repeat++) {
       const timestamp = new Date().toLocaleString();
-      const logMessage = `\n${timestamp}\n📝 Prompt ${
-        (index % prompts.length) + 1
-      }/${prompts.length} (retry ${repeat}/${retries}): "${currentPrompt}"`;
+      const logMessage = `\n${timestamp}\n📝 Prompt ${randomIndex + 1}/${
+        prompts.length
+      } (retry ${repeat}/${retries}): "${currentPrompt}"`;
       console.log(logMessage);
       if (repeat === 1) {
         await logToFile(logMessage);
@@ -186,8 +186,6 @@ while (true) {
       // Wait for a random time
       await waitRandomMinutes(params);
     }
-
-    index++;
   } catch (err) {
     console.error("❌ Error in loop:", err.message);
     await new Promise((resolve) => setTimeout(resolve, 60000));
