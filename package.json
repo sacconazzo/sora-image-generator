@@ -6,7 +6,7 @@
   "description": "A simple script to get Sora's contents",
   "scripts": {
     "start": "node app.js",
-    "chromium": "chromium-browser --remote-debugging-port=9222 --no-first-run --no-default-browser-check --disable-features=TranslateUI --no-sandbox --disable-dev-shm-usage --disable-gpu"
+    "chromium": "chromium-browser   --remote-debugging-port=9222   --no-first-run --no-default-browser-check   --disable-features=TranslateUI   --disable-gpu   --renderer-process-limit=1   --process-per-site   --single-process   --disable-extensions   --disable-background-networking"
   },
   "dependencies": {
     "puppeteer-core": "^24.7.2"
