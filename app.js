@@ -135,8 +135,8 @@ while (true) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Position the cursor
-      await page.keyboard.press("Tab");
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // await page.keyboard.press("Tab");
+      // await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Select all and delete
       await page.keyboard.down("Control");
