@@ -2,15 +2,18 @@
   "prompts": [
     {
       "text": "Un paesaggio futuristico su {{location}} con {{feature}}.",
-      "retries": 3
+      "retries": 3,
+      "enabled": true
     },
     {
       "text": "Una {{character}} che fa {{activity}} in una {{location}}.",
-      "retries": 2
+      "retries": 2,
+      "enabled": false
     },
     {
       "text": "Un {{character}} che {{action}} nello stile di {{style}}.",
-      "retries": 1
+      "retries": 1,
+      "enabled": true
     }
   ],
   "vars": {

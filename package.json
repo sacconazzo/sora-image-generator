@@ -1,7 +1,7 @@
 {
   "name": "sora-generate-puppeteer",
   "type": "module",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "MIT",
   "description": "A simple script to get Sora's contents",
   "scripts": {

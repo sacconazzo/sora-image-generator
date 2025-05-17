@@ -98,9 +98,17 @@ while (true) {
       await readFile("playbook.json", "utf-8")
     );
 
-    // Select a random prompt
-    const randomIndex = Math.floor(Math.random() * prompts.length);
-    const currentPromptTemplate = prompts[randomIndex];
+    // Prompt enabled check
+    const enabledPrompts = prompts.filter((p) => p.enabled);
+    if (enabledPrompts.length === 0) {
+      console.log("❌ Nessun prompt abilitato.");
+      await waitRandomMinutes(params);
+      continue;
+    }
+
+    // Select a random prompt tra quelli abilitati
+    const randomIndex = Math.floor(Math.random() * enabledPrompts.length);
+    const currentPromptTemplate = enabledPrompts[randomIndex];
     const currentPromptText = currentPromptTemplate.text;
     const retries = currentPromptTemplate.retries || 3; // Default to 3 retries if not specified
     const currentPrompt = replaceVariables(currentPromptText, vars);
