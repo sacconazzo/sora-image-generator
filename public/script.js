@@ -40,9 +40,9 @@ async function loadPlaybook() {
     if (!response.ok) throw new Error("Failed to load playbook");
     playbook = await response.json();
     renderAll();
-    showMessage("✅ Playbook caricato con successo", "success");
+    showMessage("✅ Playbook loaded successfully", "success");
   } catch (error) {
-    showMessage(`❌ Errore nel caricamento: ${error.message}`, "error");
+    showMessage(`❌ Error loading: ${error.message}`, "error");
   }
 }
 
@@ -63,9 +63,9 @@ async function savePlaybook() {
       );
     }
 
-    showMessage("✅ Playbook salvato con successo", "success");
+    showMessage("✅ Playbook saved successfully", "success");
   } catch (error) {
-    showMessage(`❌ Errore nel salvataggio: ${error.message}`, "error");
+    showMessage(`❌ Error saving: ${error.message}`, "error");
   }
 }
 
@@ -83,12 +83,12 @@ async function checkGeneratorStatus() {
 function updateGeneratorUI(running) {
   if (running) {
     statusDot.className = "status-dot running";
-    statusText.textContent = "In esecuzione";
+    statusText.textContent = "Running";
     startBtn.disabled = true;
     stopBtn.disabled = false;
   } else {
     statusDot.className = "status-dot stopped";
-    statusText.textContent = "Fermo";
+    statusText.textContent = "Stopped";
     startBtn.disabled = false;
     stopBtn.disabled = true;
   }
@@ -106,10 +106,10 @@ async function startGenerator() {
       throw new Error(result.error);
     }
 
-    showMessage("✅ Generatore avviato", "success");
+    showMessage("✅ Generator started", "success");
     checkGeneratorStatus();
   } catch (error) {
-    showMessage(`❌ Errore: ${error.message}`, "error");
+    showMessage(`❌ Error: ${error.message}`, "error");
   }
 }
 
@@ -125,10 +125,10 @@ async function stopGenerator() {
       throw new Error(result.error);
     }
 
-    showMessage("🛑 Generatore in arresto...", "info");
+    showMessage("🛑 Generator stopping...", "info");
     checkGeneratorStatus();
   } catch (error) {
-    showMessage(`❌ Errore: ${error.message}`, "error");
+    showMessage(`❌ Error: ${error.message}`, "error");
   }
 }
 
@@ -177,6 +177,7 @@ function collectData() {
   playbook.prompts = Array.from(promptCards).map((card) => ({
     text: card.querySelector(".prompt-text").value,
     retries: parseInt(card.querySelector(".prompt-retries").value) || 1,
+    enabled: card.querySelector(".prompt-enabled").checked,
   }));
 
   // Collect vars
@@ -221,16 +222,24 @@ function createPromptCard(prompt, index) {
   card.innerHTML = `
     <div class="prompt-header">
       <span class="prompt-number">Prompt ${index + 1}</span>
-      <button class="btn btn-danger remove-prompt">🗑️ Rimuovi</button>
+      <button class="btn btn-danger remove-prompt">🗑️ Remove</button>
     </div>
     <div class="form-group">
-      <label>Testo del Prompt:</label>
-      <textarea class="prompt-text" placeholder="Inserisci il prompt con variabili {{nome}}">${
+      <label>
+        <input type="checkbox" class="prompt-enabled" ${
+          prompt.enabled !== false ? "checked" : ""
+        }>
+        Enabled
+      </label>
+    </div>
+    <div class="form-group">
+      <label>Prompt Text:</label>
+      <textarea class="prompt-text" placeholder="Enter prompt with variables {{name}}">${
         prompt.text || ""
       }</textarea>
     </div>
     <div class="form-group">
-      <label>Numero di Retry:</label>
+      <label>Number of Retries:</label>
       <input type="number" class="prompt-retries" min="1" value="${
         prompt.retries || 1
       }" />
@@ -259,11 +268,11 @@ function createVarCard(varName, values) {
 
   card.innerHTML = `
     <div class="var-header">
-      <input type="text" class="var-name-input" value="${varName}" placeholder="nome_variabile" style="font-weight: bold; color: #764ba2; font-size: 1.1em; border: none; background: transparent; width: auto;">
-      <button class="btn btn-danger remove-var">🗑️ Rimuovi</button>
+      <input type="text" class="var-name-input" value="${varName}" placeholder="variable_name" style="font-weight: bold; color: #764ba2; font-size: 1.1em; border: none; background: transparent; width: auto;">
+      <button class="btn btn-danger remove-var">🗑️ Remove</button>
     </div>
     <div class="values-container"></div>
-    <button class="btn-add-value">+ Aggiungi Valore</button>
+    <button class="btn-add-value">+ Add Value</button>
   `;
 
   const valuesContainer = card.querySelector(".values-container");
@@ -274,7 +283,7 @@ function createVarCard(varName, values) {
       const valueRow = document.createElement("div");
       valueRow.className = "value-row";
       valueRow.innerHTML = `
-        <input type="text" class="value-input" value="${value}" placeholder="Valore">
+        <input type="text" class="value-input" value="${value}" placeholder="Value">
         <button class="btn-remove-value">✕</button>
       `;
 
@@ -311,7 +320,7 @@ function renderParams() {
 
 // Add new items
 addPromptBtn.addEventListener("click", () => {
-  playbook.prompts.push({ text: "", retries: 1 });
+  playbook.prompts.push({ text: "", retries: 1, enabled: true });
   renderPrompts();
 });
 

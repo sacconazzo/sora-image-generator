@@ -123,6 +123,9 @@ function validatePlaybook(data) {
       ) {
         errors.push(`prompts[${index}].retries must be a positive integer`);
       }
+      if (prompt.enabled !== undefined && typeof prompt.enabled !== "boolean") {
+        errors.push(`prompts[${index}].enabled must be a boolean`);
+      }
     });
   }
 
@@ -195,9 +198,9 @@ async function runGenerator() {
           await readFile("playbook.json", "utf-8")
         );
 
-        const enabledPrompts = prompts.filter((p) => p.enabled);
+        const enabledPrompts = prompts.filter((p) => p.enabled !== false);
         if (enabledPrompts.length === 0) {
-          log("❌ Nessun prompt abilitato.", "warning");
+          log("❌ No enabled prompts.", "warning");
           await waitRandomMinutes(params);
           continue;
         }

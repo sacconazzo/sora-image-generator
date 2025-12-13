@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,26 +10,26 @@
     <div class="container">
       <header>
         <h1>🎨 Sora Playbook Manager</h1>
-        <p>Gestisci i tuoi prompt, variabili e parametri</p>
+        <p>Manage your prompts, variables and parameters</p>
       </header>
 
       <div class="actions">
-        <button id="loadBtn" class="btn btn-secondary">🔄 Carica</button>
-        <button id="saveBtn" class="btn btn-primary">💾 Salva</button>
+        <button id="loadBtn" class="btn btn-secondary">🔄 Load</button>
+        <button id="saveBtn" class="btn btn-primary">💾 Save</button>
       </div>
 
       <div id="message" class="message"></div>
 
       <!-- GENERATOR CONTROL SECTION -->
       <section class="section generator-control">
-        <h2>🚀 Controllo Generatore</h2>
+        <h2>🚀 Generator Control</h2>
         <div class="generator-status">
           <div class="status-indicator">
             <span id="statusDot" class="status-dot stopped"></span>
-            <span id="statusText">Fermo</span>
+            <span id="statusText">Stopped</span>
           </div>
           <div class="generator-buttons">
-            <button id="startBtn" class="btn btn-success">▶️ Avvia</button>
+            <button id="startBtn" class="btn btn-success">▶️ Start</button>
             <button id="stopBtn" class="btn btn-danger" disabled>
               ⏹️ Stop
             </button>
@@ -40,8 +40,8 @@
       <!-- LOG SECTION -->
       <section class="section">
         <div class="section-header">
-          <h2>📋 Log Generazione</h2>
-          <button id="clearLogsBtn" class="btn btn-small">🗑️ Pulisci</button>
+          <h2>📋 Generation Logs</h2>
+          <button id="clearLogsBtn" class="btn btn-small">🗑️ Clear</button>
         </div>
         <div id="logContainer" class="log-container"></div>
       </section>
@@ -50,9 +50,7 @@
       <section class="section">
         <div class="section-header">
           <h2>📝 Prompts</h2>
-          <button id="addPromptBtn" class="btn btn-small">
-            + Aggiungi Prompt
-          </button>
+          <button id="addPromptBtn" class="btn btn-small">+ Add Prompt</button>
         </div>
         <div id="promptsContainer"></div>
       </section>
@@ -60,20 +58,18 @@
       <!-- VARS SECTION -->
       <section class="section">
         <div class="section-header">
-          <h2>🔧 Variabili</h2>
-          <button id="addVarBtn" class="btn btn-small">
-            + Aggiungi Variabile
-          </button>
+          <h2>🔧 Variables</h2>
+          <button id="addVarBtn" class="btn btn-small">+ Add Variable</button>
         </div>
         <div id="varsContainer"></div>
       </section>
 
       <!-- PARAMS SECTION -->
       <section class="section">
-        <h2>⚙️ Parametri</h2>
+        <h2>⚙️ Parameters</h2>
         <div class="params-grid">
           <div class="form-group">
-            <label for="waitMin">Wait Min (minuti):</label>
+            <label for="waitMin">Wait Min (minutes):</label>
             <input
               type="number"
               id="waitMin"
@@ -83,7 +79,7 @@
             />
           </div>
           <div class="form-group">
-            <label for="waitMax">Wait Max (minuti):</label>
+            <label for="waitMax">Wait Max (minutes):</label>
             <input
               type="number"
               id="waitMax"
