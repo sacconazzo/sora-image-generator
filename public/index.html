@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sora Playbook Manager</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>🎨 Sora Playbook Manager</h1>
+        <p>Gestisci i tuoi prompt, variabili e parametri</p>
+      </header>
+
+      <div class="actions">
+        <button id="loadBtn" class="btn btn-secondary">🔄 Carica</button>
+        <button id="saveBtn" class="btn btn-primary">💾 Salva</button>
+      </div>
+
+      <div id="message" class="message"></div>
+
+      <!-- GENERATOR CONTROL SECTION -->
+      <section class="section generator-control">
+        <h2>🚀 Controllo Generatore</h2>
+        <div class="generator-status">
+          <div class="status-indicator">
+            <span id="statusDot" class="status-dot stopped"></span>
+            <span id="statusText">Fermo</span>
+          </div>
+          <div class="generator-buttons">
+            <button id="startBtn" class="btn btn-success">▶️ Avvia</button>
+            <button id="stopBtn" class="btn btn-danger" disabled>
+              ⏹️ Stop
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- LOG SECTION -->
+      <section class="section">
+        <div class="section-header">
+          <h2>📋 Log Generazione</h2>
+          <button id="clearLogsBtn" class="btn btn-small">🗑️ Pulisci</button>
+        </div>
+        <div id="logContainer" class="log-container"></div>
+      </section>
+
+      <!-- PROMPTS SECTION -->
+      <section class="section">
+        <div class="section-header">
+          <h2>📝 Prompts</h2>
+          <button id="addPromptBtn" class="btn btn-small">
+            + Aggiungi Prompt
+          </button>
+        </div>
+        <div id="promptsContainer"></div>
+      </section>
+
+      <!-- VARS SECTION -->
+      <section class="section">
+        <div class="section-header">
+          <h2>🔧 Variabili</h2>
+          <button id="addVarBtn" class="btn btn-small">
+            + Aggiungi Variabile
+          </button>
+        </div>
+        <div id="varsContainer"></div>
+      </section>
+
+      <!-- PARAMS SECTION -->
+      <section class="section">
+        <h2>⚙️ Parametri</h2>
+        <div class="params-grid">
+          <div class="form-group">
+            <label for="waitMin">Wait Min (minuti):</label>
+            <input
+              type="number"
+              id="waitMin"
+              min="0"
+              step="0.1"
+              placeholder="7"
+            />
+          </div>
+          <div class="form-group">
+            <label for="waitMax">Wait Max (minuti):</label>
+            <input
+              type="number"
+              id="waitMax"
+              min="0"
+              step="0.1"
+              placeholder="10"
+            />
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

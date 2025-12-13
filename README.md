@@ -47,7 +47,22 @@ yarn install
 yarn start
 ```
 
-The script will begin interacting with the page, entering prompts, and generating images automatically.
+The application will start both the generator script and a web server on port **6699**.
+
+### Web Interface
+
+Access the web interface at `http://localhost:6699` to manage your playbook configuration and control the generator:
+
+**Features:**
+
+- **🚀 Generator Control**: Start and stop the image generation process with real-time status monitoring
+- **📋 Live Logs**: View generation logs in real-time with automatic updates via Server-Sent Events (SSE)
+- **📝 Prompt Management**: Add, edit, enable/disable, and remove prompts dynamically
+- **🔧 Variable Management**: Configure variables with multiple values for prompt randomization
+- **⚙️ Parameters**: Adjust wait times (min/max) between generation cycles
+- **💾 Playbook Management**: Load and save your configuration to `playbook.json`
+
+The web interface provides a user-friendly way to manage your automation without editing JSON files manually. All changes are validated before being saved to ensure configuration integrity.
 
 ## Notes
 
@@ -55,6 +70,19 @@ The script will begin interacting with the page, entering prompts, and generatin
 - Ensure the `playbook.json` file is correctly set up before running the script.
 - Logs of operations are saved in the `logs.log` file.
 
+## API Endpoints
+
+The application exposes the following REST API endpoints:
+
+- `GET /api/playbook` - Retrieve current playbook configuration
+- `POST /api/playbook` - Update playbook configuration (with validation)
+- `GET /api/generator/status` - Check if generator is running
+- `POST /api/generator/start` - Start the generator
+- `POST /api/generator/stop` - Stop the generator
+- `GET /api/logs` - Get recent logs
+- `GET /api/logs/stream` - Real-time log stream (SSE)
+
 ## Dependencies
 
 - [puppeteer-core](https://www.npmjs.com/package/puppeteer-core)
+- [express](https://www.npmjs.com/package/express)
