@@ -61,6 +61,7 @@ Access the web interface at `http://localhost:6699` to manage your playbook conf
 - **🔧 Variable Management**: Configure variables with multiple values for prompt randomization
 - **⚙️ Parameters**: Adjust wait times (min/max) between generation cycles
 - **💾 Playbook Management**: Load and save your configuration to `playbook.json`
+- **📚 Multiple Playbooks**: Save, load, and manage multiple playbook configurations in the `playbooks/` folder
 
 The web interface provides a user-friendly way to manage your automation without editing JSON files manually. All changes are validated before being saved to ensure configuration integrity.
 
@@ -76,6 +77,10 @@ The application exposes the following REST API endpoints:
 
 - `GET /api/playbook` - Retrieve current playbook configuration
 - `POST /api/playbook` - Update playbook configuration (with validation)
+- `GET /api/playbooks` - List all saved playbooks
+- `GET /api/playbooks/:name` - Load a specific playbook
+- `POST /api/playbooks/:name` - Save a playbook with custom name
+- `DELETE /api/playbooks/:name` - Delete a playbook
 - `GET /api/generator/status` - Check if generator is running
 - `POST /api/generator/start` - Start the generator
 - `POST /api/generator/stop` - Stop the generator

@@ -1,12 +1,21 @@
 import puppeteer from "puppeteer-core";
-import { readFile, appendFile, writeFile } from "fs/promises";
+import { readFile, appendFile, writeFile, readdir, mkdir } from "fs/promises";
 import express from "express";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import { EventEmitter } from "events";
+import { existsSync } from "fs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const PLAYBOOKS_DIR = join(__dirname, "playbooks");
+
+// Ensure playbooks directory exists
+async function ensurePlaybooksDir() {
+  if (!existsSync(PLAYBOOKS_DIR)) {
+    await mkdir(PLAYBOOKS_DIR, { recursive: true });
+  }
+}
 
 // Event emitter for logs
 const logEmitter = new EventEmitter();
@@ -404,6 +413,98 @@ app.get("/api/logs/stream", (req, res) => {
 // Get recent logs
 app.get("/api/logs", (req, res) => {
   res.json(recentLogs);
+});
+
+// List all playbooks in the playbooks folder
+app.get("/api/playbooks", async (req, res) => {
+  try {
+    await ensurePlaybooksDir();
+    const files = await readdir(PLAYBOOKS_DIR);
+    const playbookFiles = files.filter((f) => f.endsWith(".json"));
+    res.json({ playbooks: playbookFiles });
+  } catch (error) {
+    console.error("Error listing playbooks:", error);
+    res.status(500).json({ error: "Failed to list playbooks" });
+  }
+});
+
+// GET specific playbook from playbooks folder
+app.get("/api/playbooks/:name", async (req, res) => {
+  try {
+    const { name } = req.params;
+    if (!name.endsWith(".json")) {
+      return res.status(400).json({ error: "Invalid playbook name" });
+    }
+
+    const playbookPath = join(PLAYBOOKS_DIR, name);
+    const data = await readFile(playbookPath, "utf-8");
+    const playbook = JSON.parse(data);
+    res.json(playbook);
+  } catch (error) {
+    console.error("Error reading playbook:", error);
+    res.status(404).json({ error: "Playbook not found" });
+  }
+});
+
+// Save playbook with custom name to playbooks folder
+app.post("/api/playbooks/:name", async (req, res) => {
+  try {
+    const { name } = req.params;
+    if (!name.endsWith(".json")) {
+      return res
+        .status(400)
+        .json({ error: "Playbook name must end with .json" });
+    }
+
+    const newPlaybook = req.body;
+    const validationErrors = validatePlaybook(newPlaybook);
+    if (validationErrors.length > 0) {
+      return res.status(400).json({
+        error: "Validation failed",
+        details: validationErrors,
+      });
+    }
+
+    await ensurePlaybooksDir();
+    const playbookPath = join(PLAYBOOKS_DIR, name);
+    await writeFile(
+      playbookPath,
+      JSON.stringify(newPlaybook, null, 2),
+      "utf-8"
+    );
+
+    log(`✅ Playbook "${name}" saved successfully`, "success");
+    res.json({
+      success: true,
+      message: `Playbook "${name}" saved successfully`,
+    });
+  } catch (error) {
+    console.error("Error saving playbook:", error);
+    res.status(500).json({ error: "Failed to save playbook" });
+  }
+});
+
+// Delete a playbook from playbooks folder
+app.delete("/api/playbooks/:name", async (req, res) => {
+  try {
+    const { name } = req.params;
+    if (!name.endsWith(".json")) {
+      return res.status(400).json({ error: "Invalid playbook name" });
+    }
+
+    const playbookPath = join(PLAYBOOKS_DIR, name);
+    const fs = await import("fs/promises");
+    await fs.unlink(playbookPath);
+
+    log(`🗑️ Playbook "${name}" deleted successfully`, "success");
+    res.json({
+      success: true,
+      message: `Playbook "${name}" deleted successfully`,
+    });
+  } catch (error) {
+    console.error("Error deleting playbook:", error);
+    res.status(500).json({ error: "Failed to delete playbook" });
+  }
 });
 
 app.listen(PORT, HOST, () => {

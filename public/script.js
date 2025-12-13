@@ -5,6 +5,8 @@ let playbook = {
   params: { waitMin: 7, waitMax: 10 },
 };
 
+let availablePlaybooks = [];
+
 // DOM Elements
 const promptsContainer = document.getElementById("promptsContainer");
 const varsContainer = document.getElementById("varsContainer");
@@ -18,11 +20,18 @@ const statusText = document.getElementById("statusText");
 // Buttons
 const loadBtn = document.getElementById("loadBtn");
 const saveBtn = document.getElementById("saveBtn");
+const saveAsBtn = document.getElementById("saveAsBtn");
+const loadPlaybookBtn = document.getElementById("loadPlaybookBtn");
+const deletePlaybookBtn = document.getElementById("deletePlaybookBtn");
+const refreshPlaybooksBtn = document.getElementById("refreshPlaybooksBtn");
 const addPromptBtn = document.getElementById("addPromptBtn");
 const addVarBtn = document.getElementById("addVarBtn");
 const startBtn = document.getElementById("startBtn");
 const stopBtn = document.getElementById("stopBtn");
 const clearLogsBtn = document.getElementById("clearLogsBtn");
+
+// Selects
+const playbookSelect = document.getElementById("playbookSelect");
 
 // Utility Functions
 function showMessage(text, type = "info") {
@@ -66,6 +75,113 @@ async function savePlaybook() {
     showMessage("✅ Playbook saved successfully", "success");
   } catch (error) {
     showMessage(`❌ Error saving: ${error.message}`, "error");
+  }
+}
+
+// Playbooks Management
+async function loadPlaybooksList() {
+  try {
+    const response = await fetch("/api/playbooks");
+    if (!response.ok) throw new Error("Failed to load playbooks list");
+
+    const { playbooks } = await response.json();
+    availablePlaybooks = playbooks;
+    renderPlaybooksList();
+  } catch (error) {
+    showMessage(`❌ Error loading playbooks list: ${error.message}`, "error");
+  }
+}
+
+function renderPlaybooksList() {
+  playbookSelect.innerHTML = '<option value="">Select a playbook...</option>';
+  availablePlaybooks.forEach((name) => {
+    const option = document.createElement("option");
+    option.value = name;
+    option.textContent = name.replace(".json", "");
+    playbookSelect.appendChild(option);
+  });
+}
+
+async function loadSpecificPlaybook() {
+  const selectedName = playbookSelect.value;
+  if (!selectedName) {
+    showMessage("⚠️ Please select a playbook first", "warning");
+    return;
+  }
+
+  try {
+    const response = await fetch(`/api/playbooks/${selectedName}`);
+    if (!response.ok) throw new Error("Failed to load playbook");
+
+    playbook = await response.json();
+    renderAll();
+    showMessage(`✅ Playbook "${selectedName}" loaded successfully`, "success");
+  } catch (error) {
+    showMessage(`❌ Error loading playbook: ${error.message}`, "error");
+  }
+}
+
+async function savePlaybookAs() {
+  const name = prompt(
+    "Enter a name for the playbook (without .json extension):"
+  );
+  if (!name) return;
+
+  const filename = name.endsWith(".json") ? name : `${name}.json`;
+
+  try {
+    collectData();
+    const response = await fetch(`/api/playbooks/${filename}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(playbook),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        result.details ? result.details.join(", ") : result.error
+      );
+    }
+
+    showMessage(`✅ Playbook "${filename}" saved successfully`, "success");
+    await loadPlaybooksList();
+  } catch (error) {
+    showMessage(`❌ Error saving: ${error.message}`, "error");
+  }
+}
+
+async function deleteSelectedPlaybook() {
+  const selectedName = playbookSelect.value;
+  if (!selectedName) {
+    showMessage("⚠️ Please select a playbook first", "warning");
+    return;
+  }
+
+  if (!confirm(`Are you sure you want to delete "${selectedName}"?`)) {
+    return;
+  }
+
+  try {
+    const response = await fetch(`/api/playbooks/${selectedName}`, {
+      method: "DELETE",
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error);
+    }
+
+    showMessage(
+      `🗑️ Playbook "${selectedName}" deleted successfully`,
+      "success"
+    );
+    playbookSelect.value = "";
+    await loadPlaybooksList();
+  } catch (error) {
+    showMessage(`❌ Error deleting: ${error.message}`, "error");
   }
 }
 
@@ -333,6 +449,10 @@ addVarBtn.addEventListener("click", () => {
 // Button Events
 loadBtn.addEventListener("click", loadPlaybook);
 saveBtn.addEventListener("click", savePlaybook);
+saveAsBtn.addEventListener("click", savePlaybookAs);
+loadPlaybookBtn.addEventListener("click", loadSpecificPlaybook);
+deletePlaybookBtn.addEventListener("click", deleteSelectedPlaybook);
+refreshPlaybooksBtn.addEventListener("click", loadPlaybooksList);
 startBtn.addEventListener("click", startGenerator);
 stopBtn.addEventListener("click", stopGenerator);
 clearLogsBtn.addEventListener("click", clearLogs);
@@ -340,6 +460,7 @@ clearLogsBtn.addEventListener("click", clearLogs);
 // Load on page load
 window.addEventListener("DOMContentLoaded", () => {
   loadPlaybook();
+  loadPlaybooksList();
   checkGeneratorStatus();
   loadRecentLogs();
   connectToLogStream();

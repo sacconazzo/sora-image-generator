@@ -181,6 +181,59 @@ header p {
   gap: 10px;
 }
 
+/* Playbooks Section */
+.playbooks-section {
+  background: #fff5f5;
+  border: 2px solid #feb2b2;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.playbooks-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.playbook-select-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.playbook-select {
+  flex: 1;
+  padding: 12px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1em;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.playbook-select:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.playbook-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .playbook-actions {
+    flex-direction: column;
+  }
+  
+  .playbook-actions .btn {
+    width: 100%;
+  }
+}
+
 /* Log Container */
 .log-container {
   background: #1a202c;

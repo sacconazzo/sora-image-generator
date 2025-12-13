@@ -14,11 +14,41 @@
       </header>
 
       <div class="actions">
-        <button id="loadBtn" class="btn btn-secondary">🔄 Load</button>
-        <button id="saveBtn" class="btn btn-primary">💾 Save</button>
+        <button id="loadBtn" class="btn btn-secondary">🔄 Load Runtime</button>
+        <button id="saveBtn" class="btn btn-primary">💾 Save Runtime</button>
       </div>
 
       <div id="message" class="message"></div>
+
+      <!-- PLAYBOOKS MANAGEMENT SECTION -->
+      <section class="section playbooks-section">
+        <h2>📚 Playbooks Library</h2>
+        <div class="playbooks-controls">
+          <div class="playbook-select-group">
+            <select id="playbookSelect" class="playbook-select">
+              <option value="">Select a playbook...</option>
+            </select>
+            <button
+              id="refreshPlaybooksBtn"
+              class="btn btn-small"
+              title="Refresh list"
+            >
+              🔄
+            </button>
+          </div>
+          <div class="playbook-actions">
+            <button id="loadPlaybookBtn" class="btn btn-secondary">
+              📂 Load Selected
+            </button>
+            <button id="saveAsBtn" class="btn btn-primary">
+              💾 Save As...
+            </button>
+            <button id="deletePlaybookBtn" class="btn btn-danger">
+              🗑️ Delete
+            </button>
+          </div>
+        </div>
+      </section>
 
       <!-- GENERATOR CONTROL SECTION -->
       <section class="section generator-control">
