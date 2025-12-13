@@ -234,6 +234,12 @@ header p {
   }
 }
 
+/* Log Buttons */
+.log-buttons {
+  display: flex;
+  gap: 10px;
+}
+
 /* Log Container */
 .log-container {
   background: #1a202c;
@@ -245,6 +251,39 @@ header p {
   font-family: "Monaco", "Menlo", "Courier New", monospace;
   font-size: 0.9em;
   line-height: 1.5;
+  transition: all 0.3s ease;
+}
+
+/* Log Fullscreen Mode */
+.log-container.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 100vh;
+  width: 100vw;
+  z-index: 9999;
+  border-radius: 0;
+  padding: 30px;
+  font-size: 1em;
+  animation: expandFullscreen 0.3s ease;
+}
+
+@keyframes expandFullscreen {
+  from {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.log-container.fullscreen .log-entry {
+  padding: 8px 0;
+  font-size: 1.1em;
 }
 
 .log-entry {

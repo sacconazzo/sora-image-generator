@@ -393,12 +393,6 @@ app.get("/api/logs/stream", (req, res) => {
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
 
-  // Send recent logs
-  recentLogs.forEach((log) => {
-    res.write(`data: ${JSON.stringify(log)}\n\n`);
-  });
-
-  // Listen for new logs
   const logListener = (logEntry) => {
     res.write(`data: ${JSON.stringify(logEntry)}\n\n`);
   };

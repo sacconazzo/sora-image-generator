@@ -6,6 +6,8 @@ let playbook = {
 };
 
 let availablePlaybooks = [];
+let logEventSource = null; // Keep track of SSE connection
+let displayedLogs = new Set(); // Track displayed logs to prevent duplicates
 
 // DOM Elements
 const promptsContainer = document.getElementById("promptsContainer");
@@ -29,6 +31,7 @@ const addVarBtn = document.getElementById("addVarBtn");
 const startBtn = document.getElementById("startBtn");
 const stopBtn = document.getElementById("stopBtn");
 const clearLogsBtn = document.getElementById("clearLogsBtn");
+const fullscreenLogsBtn = document.getElementById("fullscreenLogsBtn");
 
 // Selects
 const playbookSelect = document.getElementById("playbookSelect");
@@ -250,6 +253,16 @@ async function stopGenerator() {
 
 // Log Management
 function addLogEntry(logEntry) {
+  // Create unique ID for log entry
+  const logId = `${logEntry.timestamp}-${logEntry.message}-${logEntry.type}`;
+  
+  // Skip if already displayed
+  if (displayedLogs.has(logId)) {
+    return;
+  }
+  
+  displayedLogs.add(logId);
+  
   const logDiv = document.createElement("div");
   logDiv.className = `log-entry ${logEntry.type}`;
   logDiv.innerHTML = `<span class="timestamp">[${logEntry.timestamp}]</span>${logEntry.message}`;
@@ -259,25 +272,38 @@ function addLogEntry(logEntry) {
 
 function clearLogs() {
   logContainer.innerHTML = "";
+  displayedLogs.clear(); // Reset tracking
 }
 
 // SSE for real-time logs
 function connectToLogStream() {
-  const eventSource = new EventSource("/api/logs/stream");
+  // Close existing connection if any
+  if (logEventSource) {
+    logEventSource.close();
+    logEventSource = null;
+  }
 
-  eventSource.onmessage = (event) => {
+  logEventSource = new EventSource("/api/logs/stream");
+
+  logEventSource.onmessage = (event) => {
     const logEntry = JSON.parse(event.data);
     addLogEntry(logEntry);
   };
 
-  eventSource.onerror = (error) => {
+  logEventSource.onerror = (error) => {
     console.error("SSE error:", error);
+    if (logEventSource) {
+      logEventSource.close();
+      logEventSource = null;
+    }
     setTimeout(connectToLogStream, 5000); // Reconnect after 5 seconds
   };
 }
 
 async function loadRecentLogs() {
   try {
+    // Clear existing logs before loading
+    clearLogs();
     const response = await fetch("/api/logs");
     const logs = await response.json();
     logs.forEach(addLogEntry);
@@ -456,6 +482,37 @@ refreshPlaybooksBtn.addEventListener("click", loadPlaybooksList);
 startBtn.addEventListener("click", startGenerator);
 stopBtn.addEventListener("click", stopGenerator);
 clearLogsBtn.addEventListener("click", clearLogs);
+fullscreenLogsBtn.addEventListener("click", toggleLogFullscreen);
+
+// Toggle Log Fullscreen
+function toggleLogFullscreen() {
+  logContainer.classList.toggle("fullscreen");
+
+  if (logContainer.classList.contains("fullscreen")) {
+    fullscreenLogsBtn.textContent = "✖️ Exit Fullscreen";
+    fullscreenLogsBtn.style.position = "fixed";
+    fullscreenLogsBtn.style.top = "20px";
+    fullscreenLogsBtn.style.right = "20px";
+    fullscreenLogsBtn.style.zIndex = "10000";
+
+    // Close on ESC key
+    document.addEventListener("keydown", escapeFullscreen);
+  } else {
+    fullscreenLogsBtn.textContent = "🔲 Fullscreen";
+    fullscreenLogsBtn.style.position = "";
+    fullscreenLogsBtn.style.top = "";
+    fullscreenLogsBtn.style.right = "";
+    fullscreenLogsBtn.style.zIndex = "";
+
+    document.removeEventListener("keydown", escapeFullscreen);
+  }
+}
+
+function escapeFullscreen(e) {
+  if (e.key === "Escape" && logContainer.classList.contains("fullscreen")) {
+    toggleLogFullscreen();
+  }
+}
 
 // Load on page load
 window.addEventListener("DOMContentLoaded", () => {
