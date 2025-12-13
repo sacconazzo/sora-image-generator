@@ -1,7 +1,7 @@
 {
   "name": "sora-generate-puppeteer",
   "type": "module",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "license": "MIT",
   "description": "A simple script to get Sora's contents",
   "scripts": {
@@ -9,6 +9,8 @@
     "chromium": "chromium-browser   --remote-debugging-port=9222   --no-first-run --no-default-browser-check   --disable-features=TranslateUI   --disable-gpu   --renderer-process-limit=1   --process-per-site   --single-process   --disable-extensions   --disable-background-networking"
   },
   "dependencies": {
+    "body-parser": "^2.2.1",
+    "express": "^5.2.1",
     "puppeteer-core": "^24.7.2"
   }
 }
