@@ -303,9 +303,9 @@ function collectData() {
     const varName = card.querySelector(".var-name-input").value.trim();
     if (varName) {
       const valueInputs = card.querySelectorAll(".value-input");
-      playbook.vars[varName] = Array.from(valueInputs)
-        .map((input) => input.value.trim())
-        .filter((v) => v !== "");
+      playbook.vars[varName] = Array.from(valueInputs).map(
+        (input) => input.value
+      );
     }
   });
 

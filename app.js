@@ -122,8 +122,8 @@ function validatePlaybook(data) {
     errors.push("prompts must be an array");
   } else {
     data.prompts.forEach((prompt, index) => {
-      if (typeof prompt.text !== "string" || prompt.text.trim() === "") {
-        errors.push(`prompts[${index}].text must be a non-empty string`);
+      if (typeof prompt.text !== "string") {
+        errors.push(`prompts[${index}].text must be a string`);
       }
       if (
         typeof prompt.retries !== "number" ||
