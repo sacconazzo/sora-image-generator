@@ -13,6 +13,11 @@ body {
   color: #333;
 }
 
+body.no-scroll {
+  overflow: hidden;
+  height: 100vh;
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;

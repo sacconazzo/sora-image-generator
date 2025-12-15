@@ -255,14 +255,14 @@ async function stopGenerator() {
 function addLogEntry(logEntry) {
   // Create unique ID for log entry
   const logId = `${logEntry.timestamp}-${logEntry.message}-${logEntry.type}`;
-  
+
   // Skip if already displayed
   if (displayedLogs.has(logId)) {
     return;
   }
-  
+
   displayedLogs.add(logId);
-  
+
   const logDiv = document.createElement("div");
   logDiv.className = `log-entry ${logEntry.type}`;
   logDiv.innerHTML = `<span class="timestamp">[${logEntry.timestamp}]</span>${logEntry.message}`;
@@ -495,6 +495,9 @@ function toggleLogFullscreen() {
     fullscreenLogsBtn.style.right = "20px";
     fullscreenLogsBtn.style.zIndex = "10000";
 
+    // Block body scroll
+    document.body.classList.add("no-scroll");
+
     // Close on ESC key
     document.addEventListener("keydown", escapeFullscreen);
   } else {
@@ -503,6 +506,9 @@ function toggleLogFullscreen() {
     fullscreenLogsBtn.style.top = "";
     fullscreenLogsBtn.style.right = "";
     fullscreenLogsBtn.style.zIndex = "";
+
+    // Restore body scroll
+    document.body.classList.remove("no-scroll");
 
     document.removeEventListener("keydown", escapeFullscreen);
   }
